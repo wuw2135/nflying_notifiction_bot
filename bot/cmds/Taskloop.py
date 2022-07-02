@@ -36,7 +36,7 @@ class Loop(Cog_Extension):
         
         if len(accdata):
             yt_ind %= len(accdata)
-            await self.bot.get_command('ytl_update_cod').callback(self,ctx,accdata,yt_ind)
+            await self.bot.get_command('yt_update_cod').callback(self,ctx,accdata,yt_ind)
             yt_ind += 1
             
 
