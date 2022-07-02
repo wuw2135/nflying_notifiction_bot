@@ -37,7 +37,7 @@
     - ytadd_vid [影片連結]
 * YoutubeLive
     - ytlivadd_id [頻道連結] ***注意並不接受https://www.youtube.com/c/[帳號名稱]**
-    - ytlivadd)vid [影片連結]
+    - ytlivadd_vid [影片連結]
 * Vlive
     - vliadd [頻道連結]
 * Instagram
