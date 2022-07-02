@@ -104,7 +104,6 @@ class Vlive(Cog_Extension):
         time.sleep(10)
         soup = BeautifulSoup(self.bot.vli_task_driver.page_source, "html.parser")
         if soup.select('a[class^="post_area"]'):
-            print("here")
             for i in range(len(soup.select('a[class^="post_area"]'))):
                 if i == 3:
                     break
