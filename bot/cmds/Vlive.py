@@ -101,14 +101,17 @@ class Vlive(Cog_Extension):
         channel = self.bot.get_channel(accdata[vli_ind]["channel"])
 
         self.bot.vli_task_driver.get(accdata[vli_ind]["starboard"])
-        time.sleep(random.randint(3,8))
+        time.sleep(10)
         soup = BeautifulSoup(self.bot.vli_task_driver.page_source, "html.parser")
         if soup.select('a[class^="post_area"]'):
+            print("here")
             for i in range(len(soup.select('a[class^="post_area"]'))):
+                if i == 3:
+                    break
                 post = soup.select('a[class^="post_area"]')[i]
                 lastpost = int(post.get("href").split('-')[1])  
 
-                if lastpost > accdata[vli_ind]["lastpost"]:
+                if lastpost != accdata[vli_ind]["lastpost"]:
                     liveflag = False
                     
                     if post.select('em[class*=liveon]'):
@@ -141,14 +144,16 @@ class Vlive(Cog_Extension):
             accdata[vli_ind]["lastpost"] = int(soup.select('a[class^="post_area"]')[0].get("href").split('-')[1])
         
         self.bot.vli_task_driver.get(accdata[vli_ind]["notice"])
-        time.sleep(random.randint(3,8))
+        time.sleep(10)
         soup = BeautifulSoup(self.bot.vli_task_driver.page_source, "html.parser")
         if soup.select('a[class^="post_item"]'):
             for i in range(len(soup.select('a[class^="post_item"]'))):
+                if i == 3:
+                    break
                 post = soup.select('a[class^="post_item"]')[i]
                 nolastpost = int(post.select('a[class^="post_area"]').get("href").split('-')[1])  
 
-                if nolastpost > accdata[vli_ind]["nolastpost"]:
+                if nolastpost != accdata[vli_ind]["nolastpost"]:
                     url = "https://www.vlive.tv"+post.select_one('a[class^="post_area"]').get("href")
                     title = post.select_one('strong[class^="title_text"]').get_text()
                     thumbstr = post.select_one('span[class^="covered_image"]').get("style")
