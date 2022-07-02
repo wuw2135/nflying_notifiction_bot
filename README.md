@@ -20,6 +20,7 @@
 
 ## 前置作業  
 * requirements.txt的py套件請安裝，可能不完全，若執行時有缺少請順便安裝後回報
+* 讓他24hr運轉的方法  
 
 因為礙於個資跟api的限制，所以檔案下載之後請在**secretdata.json**處打上以下資料  
 * Discord bot Token
