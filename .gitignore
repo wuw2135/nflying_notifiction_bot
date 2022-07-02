@@ -1,11 +1,5 @@
 /test.py
 /twitterapikey
-/bot/secretdata.json
-/bot/cmds/data/Twitterfol.json
-/bot/cmds/data/Vlivefol.json
-/bot/cmds/data/YoutubeLivefol.json
-/bot/cmds/data/Youtubefol.json
-/bot/cmds/data/Instagramfol.json
 /.vscode
 /bot/screenshot.png
 /bot/cmds/__pycache__
