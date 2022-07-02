@@ -21,7 +21,7 @@ class Loop(Cog_Extension):
 
         if len(accdata):
             tw_ind %= len(accdata)
-            await self.bot.get_command('tw_update_cod').callback(self,ctx,accdata,ins_ind)
+            await self.bot.get_command('tw_update_cod').callback(self,ctx,accdata,tw_ind)
             tw_ind += 1
             
 
