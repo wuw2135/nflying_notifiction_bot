@@ -1,21 +1,21 @@
 ## 功能預覽
-* Twitter (3s / per account)
+* Twitter (3s / per account)  
 ![image](https://cdn.discordapp.com/attachments/975334386935427122/992833846120808700/unknown.png)
-* Youtube (11s / per account)
+* Youtube (11s / per account)  
 ![image](https://cdn.discordapp.com/attachments/975334386935427122/992834005256912997/unknown.png)
-* YoutubeLive (15m / per account)
+* YoutubeLive (15m / per account)  
 尚無，待更新
 * Vlive (5m / per account)
-    - 新影片
+    - 新影片  
     ![image](https://cdn.discordapp.com/attachments/975334386935427122/992834352373321869/unknown.png)
-    - 新直播
+    - 新直播  
     ![image](https://cdn.discordapp.com/attachments/975334386935427122/992834506585276556/unknown.png)
-    - 新貼文
+    - 新貼文  
     尚無，待更新
 * Instagram (5m / per account)
-    - 新貼文
+    - 新貼文  
     ![image](https://cdn.discordapp.com/attachments/975334386935427122/992834787159060511/unknown.png)
-    - 新限時動態
+    - 新限時動態  
     ![image](https://cdn.discordapp.com/attachments/975334386935427122/992835006646988950/unknown.png)
 
 ## 前置作業  
