@@ -1,4 +1,3 @@
-from click import option
 import discord
 from discord.ext import commands
 

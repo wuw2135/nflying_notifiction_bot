@@ -9,3 +9,4 @@
 /.vscode
 /bot/screenshot.png
 /bot/cmds/__pycache__
+/requirements.in
