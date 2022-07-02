@@ -8,13 +8,11 @@ import asyncio
 import dateutil.parser
 import os
 import random
-from bs4 import BeautifulSoup
 from selenium import webdriver
 from selenium.webdriver.chrome.options import Options
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
-import requests
 from pathlib import Path
 
 path = Path(os.path.dirname(__file__)).parent.absolute()
@@ -146,27 +144,8 @@ class Instagram(Cog_Extension):
                     embeds.set_image(url = self.bot.ins_driver.find_elements(By.CSS_SELECTOR, "[class^='_ab1d']").get_attribute("poster"))
                     embeds.add_field(name = "photo", value=self.bot.ins_driver.find_elements(By.CSS_SELECTOR, "[class^='_ab1d']").get_attribute("poster"), inline=False)
                 else:
-                    photos = self.bot.ins_driver.find_elements(By.CLASS_NAME, "_aagu._aamh")
-                    for z in range(len(photos)):
-                        headers = {
-                            "content-type": "application/json", 
-                            "Authorization": f"Bearer {secdata['Instagram']['Bearer']}"
-                        }
+                    embeds.set_image(url = self.bot.ins_driver.find_elements(By.CLASS_NAME, "_aagu._aamh")[0].find_element(By.CLASS_NAME,"_aagt").get_attribute("src"))
 
-                        body = json.dumps({
-                            "domain": "bit.ly",
-                            "long_url": "https://www.my-url.com"
-                        })
-
-                        cururl = photos[z].find_element(By.CLASS_NAME,"_aagt").get_attribute("src")
-                        res = requests.post(url = cururl, data = body, headers = headers)
-                        phourl = res.json()["link"]
-
-                        if z == 0:
-                            embeds.set_image(url = phourl)
-                        embeds.add_field(name = "photo", value=phourl, inline=False)
-
-                embeds.set_thumbnail(url = accdata[ins_ind]["profileurl"])
                 embeds.timestamp = posttime
 
                 await channel.send(embed = embeds)

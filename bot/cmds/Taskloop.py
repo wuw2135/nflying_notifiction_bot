@@ -8,7 +8,7 @@ tw_ind = 0
 yt_ind = 0
 ytl_ind = 0
 vli_ind = 0
-ins_ind = 3
+ins_ind = 0
 
 class Loop(Cog_Extension):
     # ---------------------------Twitter Update---------------------------------
@@ -105,23 +105,23 @@ class Loop(Cog_Extension):
 
     @commands.command()
     async def tw_update_stop(self,ctx):
-        self.tw_update.cancel(ctx)
+        self.tw_update.cancel()
 
     @commands.command()
     async def yt_update_stop(self,ctx):
-        self.yt_update.cancel(ctx)
+        self.yt_update.cancel()
 
     @commands.command()
     async def ytl_update_stop(self,ctx):
-        self.yt_live_update.cancel(ctx)
+        self.yt_live_update.cancel()
 
     @commands.command()
     async def vli_update_stop(self,ctx):
-        self.vli_update.cancel(ctx)
+        self.vli_update.cancel()
 
     @commands.command()
     async def ins_update_stop(self,ctx):
-        self.ins_update.cancel(ctx)
+        self.ins_update.cancel()
 
 def setup(bot):
     bot.add_cog(Loop(bot))
