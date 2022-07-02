@@ -8,6 +8,7 @@ import asyncio
 import dateutil.parser
 import os
 import random
+from bs4 import BeautifulSoup 
 from selenium import webdriver
 from selenium.webdriver.chrome.options import Options
 from selenium.webdriver.common.by import By
@@ -137,15 +138,14 @@ class Instagram(Cog_Extension):
                 embeds = discord.Embed(title = accdata[ins_ind]["username"]+ " new post!", url = self.bot.ins_driver.current_url, color=0x7D0552)
                 embeds.description = self.bot.ins_driver.find_elements(By.CLASS_NAME, "_aacl._aaco._aacu._aacx._aad7._aade")[0].text
                 embeds.set_author(name = accdata[ins_ind]["username"],url = accdata[ins_ind]["url"], icon_url=accdata[ins_ind]["profileurl"])
-                try:
-                    self.bot.ins_driver.find_elements(By.CLASS_NAME, "_aagu._aamh")
-                except:
-                    photos = self.bot.ins_driver.find_elements(By.CSS_SELECTOR, "[class^='_ab1d']").get_attribute("poster")
-                    embeds.set_image(url = self.bot.ins_driver.find_elements(By.CSS_SELECTOR, "[class^='_ab1d']").get_attribute("poster"))
-                    embeds.add_field(name = "photo", value=self.bot.ins_driver.find_elements(By.CSS_SELECTOR, "[class^='_ab1d']").get_attribute("poster"), inline=False)
+                if self.bot.ins_driver.find_elements(By.CLASS_NAME, "_aagu._aamh") or self.bot.ins_driver.find_elements(By.CLASS_NAME, "_aagu._aato"):
+                    try:
+                        embeds.set_image(url = self.bot.ins_driver.find_elements(By.CLASS_NAME, "_aagu._aamh")[0].find_element(By.CLASS_NAME,"_aagt").get_attribute("src"))
+                    except:
+                        embeds.set_image(url = self.bot.ins_driver.find_elements(By.CLASS_NAME, "_aagu._aato")[0].find_element(By.CLASS_NAME,"_aagt").get_attribute("src"))
                 else:
-                    embeds.set_image(url = self.bot.ins_driver.find_elements(By.CLASS_NAME, "_aagu._aamh")[0].find_element(By.CLASS_NAME,"_aagt").get_attribute("src"))
-
+                    embeds.set_image(url = self.bot.ins_driver.find_element(By.CSS_SELECTOR, "[class^='_ab1d']").get_attribute("poster"))
+                
                 embeds.timestamp = posttime
 
                 await channel.send(embed = embeds)
