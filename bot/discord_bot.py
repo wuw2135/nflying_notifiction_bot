@@ -110,7 +110,7 @@ bot.search_embed = search_embed
 @bot.event
 async def on_guild_join(guild):
     await guild.text_channels[0].send(
-        "已加入 {}!\n請先設定更新訊息發送頻道!\n若未設定將不發送任何更新訊息!".format(guild.name)
+        "已加入 {}!!".format(guild.name)
     )
 
 
