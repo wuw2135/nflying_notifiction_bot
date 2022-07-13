@@ -3,13 +3,16 @@ from discord.ext import commands
 from core.classes import Cog_Extension
 import time
 import datetime
+import dateutil.parser
 import json
 import asyncio
 import os
 import random
+
 from bs4 import BeautifulSoup
 from selenium import webdriver
 from selenium.webdriver.chrome.options import Options
+from selenium.webdriver.common.by import By
 
 
 
@@ -17,6 +20,8 @@ class Vlive(Cog_Extension):
     # ---------------------------follow add---------------------------------
     @commands.command()
     async def vliadd(self,ctx,*args):
+        #only accept Notice fir and StarB format
+        
         with open(self.bot.vli_csv_path, "r", encoding="utf-8") as file:
             accdata = json.load(file)
         for arg in args:
@@ -49,22 +54,6 @@ class Vlive(Cog_Extension):
                 username = soup.find("strong").get_text()
                 await ctx.channel.send(ctx.message.author.mention, embed = self.bot.simple_format("vli","data loading..."))
 
-                self.bot.vli_driver.get(board)
-                time.sleep(random.randint(3,6))
-                soup = BeautifulSoup(self.bot.vli_driver.page_source, "html.parser")
-                if soup.select('a[class^="post_area"]'):
-                    lastpost = int(soup.select('a[class^="post_area"]')[0].get("href").split('-')[1])
-                else:
-                    lastpost = 0
-
-                self.bot.vli_driver.get(notice)
-                time.sleep(random.randint(3,6))
-                soup = BeautifulSoup(self.bot.vli_driver.page_source, "html.parser")
-                if soup.select('a[class^="post_area"]'):
-                    nolastpost = int(soup.select('a[class^="post_area"]')[0].get("href").split('-')[1])
-                else:
-                    nolastpost = 0
-
                 await ctx.channel.send(ctx.message.author.mention, embed = self.bot.simple_format("vli",f"What channel you want {username} to post from? Use channel id!"))
                 
                 channel = 0
@@ -85,8 +74,9 @@ class Vlive(Cog_Extension):
                         channel = ctx.channel.id
                         await msg.add_reaction('👎')
                         await msg.reply(embed = self.bot.simple_format("vli","I can't find it, so I will post it on this channel."))
-                    
-                accdata.append({"id" : chid, "username" : username ,"url" : arg ,"profileurl" : profileurl, "starboard": board, "notice": notice, "lastpost" : lastpost, "nolastpost": nolastpost, "channel" : channel})
+                
+                nowtime = datetime.datetime.utcnow().strftime("%Y-%m-%dT%H:%M:%S.%f")[:23]+"Z"
+                accdata.append({"id" : chid, "username" : username ,"url" : arg ,"profileurl" : profileurl, "starboard": board, "notice": notice, "lastpost" : nowtime, "nolastpost": nowtime, "channel" : channel})
             time.sleep(random.randint(3,6))
 
         await ctx.channel.send(ctx.message.author.mention, embed = self.bot.simple_format("vli","added!"))
@@ -105,26 +95,31 @@ class Vlive(Cog_Extension):
         soup = BeautifulSoup(self.bot.vli_task_driver.page_source, "html.parser")
         if soup.select('a[class^="post_area"]'):
             for i in range(len(soup.select('a[class^="post_area"]'))):
-                if i == 3:
-                    break
                 post = soup.select('a[class^="post_area"]')[i]
-                lastpost = int(post.get("href").split('-')[1])  
 
-                if lastpost != accdata[vli_ind]["lastpost"]:
-                    liveflag = False
+                liveflag = False
                     
-                    if post.select('em[class*=liveon]'):
-                        liveflag = True
+                if post.select('em[class*=liveon]'):
+                    liveflag = True
 
-                    url = "https://www.vlive.tv"+post.get("href")
-                    title = post.select_one('strong[class^="title_text"]').get_text()
-                    thumbstr = post.select_one('span[class^="covered_image"]')["style"]
-                    if liveflag:
-                        thumbnail = thumbstr[thumbstr.find("url(\"")+5:thumbstr.find("\");")]
-                    else:
-                        thumbnail = thumbstr[thumbstr.find("url(\"")+5:thumbstr.find("?type=")]
+                url = "https://www.vlive.tv"+post.get("href")
+                title = post.select_one('strong[class^="title_text"]').get_text()
+                thumbstr = post.select_one('span[class^="covered_image"]')["style"]
+                if liveflag:
+                    thumbnail = thumbstr[thumbstr.find("url(\"")+5:thumbstr.find("\");")]
+                else:
+                    thumbnail = thumbstr[thumbstr.find("url(\"")+5:thumbstr.find("?type=")]
 
-                    
+                self.bot.vli_task_driver.get(url)
+                time.sleep(random.randint(8,10))
+                posttime = self.bot.vli_task_driver.find_element(By.CSS_SELECTOR, "body > script[type='text/javascript']").get_attribute('innerHTML')
+                posttimeslice = posttime[posttime.find(',"onAirStartAt":')+16:]
+                posttime = datetime.datetime.fromtimestamp(int(posttimeslice[:posttimeslice.find('000,')]))
+                posttimestr = posttime.strftime("%Y-%m-%dT%H:%M:%S.%f")[:23]+"Z"
+
+                if dateutil.parser.isoparse(posttimestr) > dateutil.parser.isoparse(accdata[vli_ind]["lastpost"]):
+                    if i == 0:
+                        accdata[vli_ind]["lastpost"] = posttimestr
                     embeds = discord.Embed(title = title, url = url, color = 0x80ffff)
                     embeds.set_author(name = accdata[vli_ind]["username"], url = accdata[vli_ind]["url"], icon_url= accdata[vli_ind]["profileurl"])
                     if liveflag:
@@ -133,46 +128,46 @@ class Vlive(Cog_Extension):
                         embeds.description = f"{accdata[vli_ind]['username']} upload new video!"
                     
                     embeds.set_image(url = thumbnail)
-                    embeds.timestamp = datetime.datetime.utcnow()
+                    embeds.timestamp = posttime
 
                     await channel.send(embed = embeds)
                 else:
                     break
 
-
-            accdata[vli_ind]["lastpost"] = int(soup.select('a[class^="post_area"]')[0].get("href").split('-')[1])
         
         self.bot.vli_task_driver.get(accdata[vli_ind]["notice"])
         time.sleep(10)
         soup = BeautifulSoup(self.bot.vli_task_driver.page_source, "html.parser")
         if soup.select('a[class^="post_item"]'):
             for i in range(len(soup.select('a[class^="post_item"]'))):
-                if i == 3:
-                    break
                 post = soup.select('a[class^="post_item"]')[i]
-                nolastpost = int(post.select('a[class^="post_area"]').get("href").split('-')[1])  
+                url = "https://www.vlive.tv"+post.select_one('a[class^="post_area"]').get("href")
+                title = post.select_one('strong[class^="title_text"]').get_text()
+                thumbstr = post.select_one('span[class^="covered_image"]').get("style")
+                thumbnail = thumbstr[thumbstr.find("url(\"")+5:thumbstr.find("?type=")]
+                authorname = post.select_one('em[class^="writer"]').get_text()
+                authorpro = post.select_one('image[mask^="url(#thumbnail-mask-30)"]').get("xlink:href")
+                authorurl = "https://www.vlive.tv"+post.select('a[class^="link_profile"]').get("href")
 
-                if nolastpost != accdata[vli_ind]["nolastpost"]:
-                    url = "https://www.vlive.tv"+post.select_one('a[class^="post_area"]').get("href")
-                    title = post.select_one('strong[class^="title_text"]').get_text()
-                    thumbstr = post.select_one('span[class^="covered_image"]').get("style")
-                    thumbnail = thumbstr[thumbstr.find("url(\"")+5:thumbstr.find("?type=")]
-                    authorname = post.select_one('em[class^="writer"]').get_text()
-                    authorpro = post.select_one('image[mask^="url(#thumbnail-mask-30)"]').get("xlink:href")
-                    authorurl = "https://www.vlive.tv"+post.select('a[class^="link_profile"]').get("href")
-                    
+                self.bot.vli_task_driver.get(url)
+                time.sleep(random.randint(8,10))
+                posttime = self.bot.vli_task_driver.find_element(By.CSS_SELECTOR, "body > script[type='text/javascript']").get_attribute('innerHTML')
+                posttimeslice = posttime[posttime.find(',"createdAt":')+13:]
+                posttime = datetime.datetime.fromtimestamp(int(posttimeslice[:posttimeslice.find(',"')-3]))
+                posttimestr = posttime.strftime("%Y-%m-%dT%H:%M:%S.%f")[:23]+"Z"
+
+                if dateutil.parser.isoparse(posttimestr) > dateutil.parser.isoparse(accdata[vli_ind]["nolastpost"]):
+                    if i == 0:
+                        accdata[vli_ind]["nolastpost"] = posttimestr
                     embeds = discord.Embed(title = title, url = url, color = 0x80ffff)
                     embeds.set_author(name = authorname, url = authorurl, icon_url= authorpro)
                     embeds.description = f"{accdata[vli_ind]['username']} upload new post!"
                     embeds.set_image(url = thumbnail)
-                    embeds.timestamp = datetime.datetime.utcnow()
+                    embeds.timestamp = posttime
 
                     await channel.send(embed = embeds)
                 else:
                     break
-
-
-            accdata[vli_ind]["nolastpost"] = int(soup.select('a[class^="post_area"]')[0].get("href").split('-')[1])
         
         
         with open(self.bot.vli_csv_path, "w", encoding="utf-8") as file:

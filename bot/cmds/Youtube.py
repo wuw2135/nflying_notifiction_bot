@@ -1,3 +1,4 @@
+from click import command
 import discord
 from discord.ext import commands
 from core.classes import Cog_Extension
@@ -117,7 +118,29 @@ class Youtube(Cog_Extension):
         if len(tmplinks):
             await self.bot.get_command('ytadd_id').callback(self,ctx, *tmplinks)
 
+    # ---------------------------get country--------------------------------
+    @commands.command()
+    async def get_country_limits(self,ctx,*arg):
+        #miss: wrong input detect
+        links = arg[0]
+        videoid = links.split('v=')[1].split('&')[0] if  links.find('&') >= 0 else links.split('v=')[1]
+        url = f"https://youtube.googleapis.com/youtube/v3/videos?part=contentDetails&id={videoid}&key={secdata['Youtube']['yt_apikey']}"
+        response = requests.request("GET", url)
+        rlist = response.json()
+        ans = ""
+        if "items" in rlist:
+            if "regionRestriction" in rlist["items"][0]["contentDetails"]:
+                if "allowed" in rlist["items"][0]["contentDetails"]["regionRestriction"]:
+                    ans = ', '.join(rlist["items"][0]["contentDetails"]["regionRestriction"]["allowed"])
+                    await ctx.channel.send(ctx.message.author.mention, embed = self.bot.simple_format("yt","Allowed: " + ans))
+                if "blocked" in rlist["items"][0]["contentDetails"]["regionRestriction"]:
+                    ans = ', '.join(rlist["items"][0]["contentDetails"]["regionRestriction"]["blocked"])
+                    await ctx.channel.send(ctx.message.author.mention, embed = self.bot.simple_format("yt","Blocked: " + ans))
 
+        if ans == "":
+            await ctx.channel.send(ctx.message.author.mention, embed = self.bot.simple_format("yt","Nothing!"))
+
+    # ---------------------------update---------------------------------
     @commands.command(hidden = True)
     async def yt_update_cod(self,ctx,accdata,yt_ind):
         url = "https://youtube.googleapis.com/youtube/v3/activities?part=snippet,contentDetails&channelId="+accdata[yt_ind]["id"]+"&maxResults=25&publishedAfter="+accdata[yt_ind]["lastpost"]+"&key="+secdata['Youtube']['yt_apikey']
@@ -126,7 +149,8 @@ class Youtube(Cog_Extension):
         rlist = response.json()
 
         if "pageInfo" in rlist:
-            for j in range(rlist["pageInfo"]["totalResults"],0,-1):
+            for j in range(len(rlist["items"]),0,-1):
+                
                 if rlist["items"][j-1]["snippet"]["type"] != "upload" or accdata[yt_ind]["lastpost"] == dateutil.parser.isoparse(rlist["items"][j-1]["snippet"]["publishedAt"]).strftime("%Y-%m-%dT%H:%M:%S.%f")[:22]+"Z":
                     continue
                 

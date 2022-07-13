@@ -127,7 +127,7 @@ class YoutubeLive(Cog_Extension):
         rlist = response.json()
 
         if "pageInfo" in rlist:
-            for j in range(rlist["pageInfo"]["totalResults"],0,-1):
+            for j in range(len(rlist["items"]),0,-1):
                 if rlist["items"][j-1]["snippet"]["channelTitle"] != accdata[ytl_ind]["username"] or accdata[ytl_ind]["lastpost"] == dateutil.parser.isoparse(rlist["items"][j-1]["snippet"]["publishedAt"]).strftime("%Y-%m-%dT%H:%M:%S.%f")[:22]+"Z":
                     continue
         

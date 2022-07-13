@@ -21,7 +21,7 @@ class Loop(Cog_Extension):
 
         if len(accdata):
             tw_ind %= len(accdata)
-            await self.bot.get_command('tw_update_cod').callback(self,ctx,accdata,ins_ind)
+            await self.bot.get_command('tw_update_cod').callback(self,ctx,accdata,tw_ind)
             tw_ind += 1
             
 
@@ -83,6 +83,15 @@ class Loop(Cog_Extension):
             ins_ind += 1
 
     # ---------------------------To Start---------------------------------
+    @commands.command()
+    async def all_start(self,ctx):
+        self.tw_update.start(ctx)
+        self.yt_update.start(ctx)
+        self.yt_live_update.start(ctx)
+        self.vli_update.start(ctx)
+        await self.bot.get_command('login').callback(self,ctx)
+        self.ins_update.start(ctx)
+
     @commands.command()
     async def tw_update_start(self,ctx):
         self.tw_update.start(ctx)
