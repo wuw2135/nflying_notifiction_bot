@@ -1,25 +1,26 @@
 ## 功能預覽
-* Twitter (3s / per account)
+* Twitter (3s / per account)  
 ![image](https://cdn.discordapp.com/attachments/975334386935427122/992833846120808700/unknown.png)
-* Youtube (11s / per account)
+* Youtube (11s / per account)  
 ![image](https://cdn.discordapp.com/attachments/975334386935427122/992834005256912997/unknown.png)
-* YoutubeLive (15m / per account)
+* YoutubeLive (15m / per account)  
 尚無，待更新
 * Vlive (5m / per account)
-    - 新影片
+    - 新影片  
     ![image](https://cdn.discordapp.com/attachments/975334386935427122/992834352373321869/unknown.png)
-    - 新直播
+    - 新直播  
     ![image](https://cdn.discordapp.com/attachments/975334386935427122/992834506585276556/unknown.png)
-    - 新貼文
+    - 新貼文  
     尚無，待更新
 * Instagram (5m / per account)
-    - 新貼文
+    - 新貼文  
     ![image](https://cdn.discordapp.com/attachments/975334386935427122/992834787159060511/unknown.png)
-    - 新限時動態
+    - 新限時動態  
     ![image](https://cdn.discordapp.com/attachments/975334386935427122/992835006646988950/unknown.png)
 
 ## 前置作業  
 * requirements.txt的py套件請安裝，可能不完全，若執行時有缺少請順便安裝後回報
+* 讓他24hr運轉的方法  
 
 因為礙於個資跟api的限制，所以檔案下載之後請在**secretdata.json**處打上以下資料  
 * Discord bot Token
@@ -36,7 +37,7 @@
     - ytadd_vid [影片連結]
 * YoutubeLive
     - ytlivadd_id [頻道連結] ***注意並不接受https://www.youtube.com/c/[帳號名稱]**
-    - ytlivadd)vid [影片連結]
+    - ytlivadd_vid [影片連結]
 * Vlive
     - vliadd [頻道連結]
 * Instagram
@@ -57,7 +58,7 @@
 * [twi / yt / ytl / vli / ins] + _update_start
 * [twi / yt / ytl / vli / ins] + _update_stop
 
-### 一些注意事項
+## 一些注意事項
 * 開始執行追蹤時是每間隔一段時間換下一個帳號更新，所以**新增的帳號越多，每一個帳號到下一次被輪到的時間會越長**
 * 想要縮短間格時間可直接至Taskloop.py更改，更改完後請重新開啟機器人，**Youtube和YoutubeLive的部分已經設成最小值，再小會有扣打爆掉的問題(見事項4)，Vlive和Instagram的部分若縮太小會有執行不完全以及被官方判定為爬蟲程式鎖IP的可能，後果自負**
 * Twitter的API限制是每十五分鐘可以call 900次，故使用者每三秒不宜使用新增指令超過兩次，**建議在新增時一次就新增完成**
