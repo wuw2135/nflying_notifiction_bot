@@ -1,9 +1,13 @@
+##NEW UPDATE
+<2022/07/13>更新vlive時間抓取的方式，已不會有影片/貼文消失後抓取錯誤的問題; 修正Youtube Call Api資料抓取錯誤的問題; 新增全部社群同時同步開啟更新功能
+
 ## 功能預覽
 * Twitter (3s / per account)  
 ![image](https://cdn.discordapp.com/attachments/975334386935427122/992833846120808700/unknown.png)
 * Youtube (11s / per account)  
 ![image](https://cdn.discordapp.com/attachments/975334386935427122/992834005256912997/unknown.png)
-* YoutubeLive (15m / per account)  
+* YoutubeLive (15m / per account) 
+![image](https://user-images.githubusercontent.com/80589831/178683895-8a92dba3-351f-463f-b821-2a1f62981537.png)
 尚無，待更新
 * Vlive (5m / per account)
     - 新影片  
@@ -63,7 +67,7 @@
 * 想要縮短間格時間可直接至Taskloop.py更改，更改完後請重新開啟機器人，**Youtube和YoutubeLive的部分已經設成最小值，再小會有扣打爆掉的問題(見事項4)，Vlive和Instagram的部分若縮太小會有執行不完全以及被官方判定為爬蟲程式鎖IP的可能，後果自負**
 * Twitter的API限制是每十五分鐘可以call 900次，故使用者每三秒不宜使用新增指令超過兩次，**建議在新增時一次就新增完成**
 * Youtube的API每日有10000的扣打，每使用一次新增指令/查找一個帳號一次將會消耗一次扣打，Live的部分每查找一個帳號一次就是消耗一百扣打，所以**兩個API需要分開，API共用會有扣打爆炸的問題**
-* Vlive的部分因為無法追蹤時間，所以使用最後一支影片ID/文章ID作為判斷，**若途中該支影片被刪除將無法判斷，將會往後抓三支影片作為更新發布**
+* Youtube Live的部分只能取得影片建立時間，故開始直播的時候無法得知  
 * Vlive和Instagram的新增指令因為是使用爬蟲的方式完成，所以速度執行上會較慢，請耐心等候，若等待時間過長(超過一分鐘)，請到監控畫面查看問題並回報
 * Instagram的部分因為資料是用爬蟲的方式完成，所以在**執行新增指令以及執行追蹤的時間請盡量避開**，建議是先新增完成再選擇執行，若執行途中想要新增建議先暫停，等新增完成之後再繼續執行
 * 如果看得懂我很醜的code也可以自己改
