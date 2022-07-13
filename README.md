@@ -6,9 +6,8 @@
 ![image](https://cdn.discordapp.com/attachments/975334386935427122/992833846120808700/unknown.png)
 * Youtube (11s / per account)  
 ![image](https://cdn.discordapp.com/attachments/975334386935427122/992834005256912997/unknown.png)
-* YoutubeLive (15m / per account) 
-![image](https://user-images.githubusercontent.com/80589831/178683895-8a92dba3-351f-463f-b821-2a1f62981537.png)
-尚無，待更新
+* YoutubeLive (15m / per account)   
+![image](https://user-images.githubusercontent.com/80589831/178683895-8a92dba3-351f-463f-b821-2a1f62981537.png)  
 * Vlive (5m / per account)
     - 新影片  
     ![image](https://cdn.discordapp.com/attachments/975334386935427122/992834352373321869/unknown.png)
